@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Book</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Recipe Book</h1>
+
+    <div id="addRecipeForm">
+        <h2>Add New Recipe</h2>
+        <input type="text" id="recipeName" placeholder="Recipe Name">
+        <input type="text" id="cuisine" placeholder="Cuisine">
+        <input type="number" id="prepTime" placeholder="Prep Time (minutes)">
+        <input type="number" id="cookTime" placeholder="Cook Time (minutes)">
+        <input type="number" id="servings" placeholder="Servings">
+        <textarea id="ingredients" placeholder="Ingredients (comma-separated)"></textarea>
+        <textarea id="instructions" placeholder="Instructions (separate steps with newlines)"></textarea>
+        <input type="text" id="tags" placeholder="Tags (comma-separated)">
+        <button onclick="addRecipe()">Add Recipe</button>
+    </div>
+
+    <div id="recipeList"></div>
+
+    <div id="addReviewForm">
+        <h2>Add Review</h2>
+        <input type="hidden" id="reviewRecipeId">
+        <input type="text" id="reviewUser" placeholder="Your Name">
+        <input type="number" id="reviewRating" placeholder="Rating (1-5)" min="1" max="5">
+        <textarea id="reviewComment" placeholder="Your Comment"></textarea>
+        <button onclick="addReview()">Submit Review</button>
+    </div>
+
+    <div id="updateReviewForm">
+        <h2>Update Review</h2>
+        <input type="hidden" id="updateReviewRecipeId">
+        <input type="hidden" id="updateReviewId">
+        <input type="text" id="updateReviewUser" placeholder="Your Name">
+        <input type="number" id="updateReviewRating" placeholder="Rating (1-5)" min="1" max="5">
+        <textarea id="updateReviewComment" placeholder="Your Comment"></textarea>
+        <button onclick="updateReview()">Update Review</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
