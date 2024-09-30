@@ -2,6 +2,29 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const { MongoClient, ObjectId } = require('mongodb');
+const bcrypt = require('bcrypt')
+
+const jwt = require('jsonwebtoken');
+
+const generateAccessToken = (id, email) => {
+    return jwt.sign({
+        'user_id': id,
+        'email': email
+    }, process.env.TOKEN_SECRET, {
+        expiresIn: "1h"
+    });
+}
+
+const verifyToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) return res.sendStatus(403);
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+      if (err) return res.sendStatus(403);
+      req.user = user;
+      next();
+    });
+  };
 
 const app = express();
 const mongoUri = process.env.MONGO_URI;
@@ -316,6 +339,40 @@ async function main() {
             res.status(500).json({ error: 'Internal server error' });
         }
     });
+
+    app.post('/users', async function (req, res) {
+        const result = await db.collection("users").insertOne({
+            'email': req.body.email,
+            'password': await bcrypt.hash(req.body.password, 12)
+        })
+        res.json({
+            "message": "New user account",
+            "result": result
+        })
+    });
+
+    app.post('/login', async (req, res) => {
+        const { email, password } = req.body;
+        if (!email || !password) {
+          return res.status(400).json({ message: 'Email and password are required' });
+        }
+        const user = await db.collection('users').findOne({ email: email });
+        if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+        }
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+          return res.status(401).json({ message: 'Invalid password' });
+        }
+        const accessToken = generateAccessToken(user._id, user.email);
+        res.json({ accessToken: accessToken });
+    });
+    
+    app.get('/profile', verifyToken, (req, res) => {
+        res.json({ message: 'This is a protected route', user: req.user });
+      });
+
+    
 }
 
 main();
