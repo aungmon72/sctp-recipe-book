@@ -1,5 +1,5 @@
-const API_URL = 'https://literate-umbrella-r46rw474xv6hxr4p-3000.app.github.dev';  // Update this with your actual API URL
-
+//  const API_URL = 'https://literate-umbrella-r46rw474xv6hxr4p-3000.app.github.dev';  // Update this with your actual API URL
+const API_URL = 'https://literate-spork-r4p7vqxg97w52ppjg-8000.app.github.dev/'; 
 async function fetchRecipes() {
     try {
         let response = await axios.get(`${API_URL}/recipes`);
